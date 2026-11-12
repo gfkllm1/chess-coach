@@ -1,0 +1,33 @@
+{
+  "annotations": {
+    "changelogDate": "20260107161907"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "projectname",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "budget",
+      "fieldType": "Float"
+    }
+  ],
+  "name": "Project",
+  "relationships": [
+    {
+      "otherEntityName": "toDoItem",
+      "otherEntityRelationshipName": "project",
+      "relationshipName": "todoitem",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

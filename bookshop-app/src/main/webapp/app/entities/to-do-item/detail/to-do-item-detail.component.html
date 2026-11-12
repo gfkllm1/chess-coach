@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (toDoItem(); as toDoItemRef) {
+      <div>
+        <h2 data-cy="toDoItemDetailsHeading"><span jhiTranslate="bookshopApp.toDoItem.detail.title">To Do Item</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="bookshopApp.toDoItem.id">Id</span></dt>
+          <dd>
+            <span>{{ toDoItemRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.description">Description</span></dt>
+          <dd>
+            <span>{{ toDoItemRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.duedate">Duedate</span></dt>
+          <dd>
+            <span>{{ toDoItemRef.duedate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.completetiondate">Completetiondate</span></dt>
+          <dd>
+            <span>{{ toDoItemRef.completetiondate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.owner">Owner</span></dt>
+          <dd>
+            @if (toDoItem()!.owner) {
+              <div>
+                <a [routerLink]="['/owner', toDoItem()!.owner?.id, 'view']">{{ toDoItemRef.owner?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.project">Project</span></dt>
+          <dd>
+            @if (toDoItem()!.project) {
+              <div>
+                <a [routerLink]="['/project', toDoItem()!.project?.id, 'view']">{{ toDoItemRef.project?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.context">Context</span></dt>
+          <dd>
+            @if (toDoItem()!.context) {
+              <div>
+                <a [routerLink]="['/context', toDoItem()!.context?.id, 'view']">{{ toDoItemRef.context?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.priority">Priority</span></dt>
+          <dd>
+            @if (toDoItem()!.priority) {
+              <div>
+                <a [routerLink]="['/priority', toDoItem()!.priority?.id, 'view']">{{ toDoItemRef.priority?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="bookshopApp.toDoItem.status">Status</span></dt>
+          <dd>
+            @if (toDoItem()!.status) {
+              <div>
+                <a [routerLink]="['/status', toDoItem()!.status?.id, 'view']">{{ toDoItemRef.status?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/to-do-item', toDoItemRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,64 @@
+{
+  "annotations": {
+    "changelogDate": "20260107161905"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "duedate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "completetiondate",
+      "fieldType": "LocalDate"
+    }
+  ],
+  "name": "ToDoItem",
+  "relationships": [
+    {
+      "otherEntityName": "owner",
+      "otherEntityRelationshipName": "todoitem",
+      "relationshipName": "owner",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "project",
+      "otherEntityRelationshipName": "todoitem",
+      "relationshipName": "project",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "context",
+      "otherEntityRelationshipName": "todoitem",
+      "relationshipName": "context",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "priority",
+      "otherEntityRelationshipName": "todoitem",
+      "relationshipName": "priority",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "status",
+      "otherEntityRelationshipName": "todoitem",
+      "relationshipName": "status",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

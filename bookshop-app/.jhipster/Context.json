@@ -1,0 +1,28 @@
+{
+  "annotations": {
+    "changelogDate": "20260107161908"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "id",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "descrription",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Context",
+  "relationships": [
+    {
+      "otherEntityName": "toDoItem",
+      "otherEntityRelationshipName": "context",
+      "relationshipName": "todoitem",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

@@ -1,0 +1,41 @@
+
+entity ToDoItem {
+	id String required ,
+    description String ,
+    duedate LocalDate 
+    completetiondate LocalDate
+}
+
+entity Owner {
+     id String required ,
+     firstname String required ,
+     surname String required ,
+}
+
+entity Project {
+     id String required ,
+     projectname String required ,
+     budget Float
+}
+
+entity Context {
+     id String required ,
+     descrription String
+}
+
+entity Priority {
+     level String
+}
+
+entity Status {
+      type String
+}
+relationship ManyToOne {
+ToDoItem{owner} to Owner{todoitem}
+ToDoItem{project} to Project{todoitem}
+ToDoItem{context} to Context{todoitem}
+ToDoItem{priority} to Priority{todoitem}
+ToDoItem{status} to Status{todoitem}
+
+}
+

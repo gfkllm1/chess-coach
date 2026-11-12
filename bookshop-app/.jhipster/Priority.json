@@ -1,0 +1,23 @@
+{
+  "annotations": {
+    "changelogDate": "20260107161909"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "level",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Priority",
+  "relationships": [
+    {
+      "otherEntityName": "toDoItem",
+      "otherEntityRelationshipName": "priority",
+      "relationshipName": "todoitem",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}
