@@ -1,4 +1,3 @@
-"use client"; 
 
 import Link from "next/link";
 
@@ -18,6 +17,7 @@ export default function Navbar() {
             Play
           </Link>
           <Link href="/history" className="hover:underline">
+    
             History
           </Link>
           <Link
