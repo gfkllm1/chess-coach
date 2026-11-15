@@ -7,7 +7,8 @@ import ChessBoard from "./components/ChessBoard";
 export default function Home() {
      const [game] = useState(() => new Chess());
      const [fen, setFen] = useState(() => game.fen());
-     
+     const [playerColor, setPlayerColor] = useState<"white" | "black">("white");
+
   function handleMove(from: string, to: string) {
     if (game.isGameOver()) return false;
 
@@ -19,11 +20,18 @@ export default function Home() {
        return false;
       }
    }
-   
+   function startGame(color: "white" | "black") {
+    game.reset();
+    setFen(game.fen());
+    setPlayerColor(color);
+
+    }
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
         <div className="w-full max-w-xl">
-          <ChessBoard position={fen} onMove={handleMove} />
+          <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} />
+          
       </div>
     </main>
   );
