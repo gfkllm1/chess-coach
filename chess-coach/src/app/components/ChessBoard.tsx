@@ -2,14 +2,25 @@
 
 import { Chessboard } from "react-chessboard";
 
-export default function ChessBoard() {
+type ChessBoardProps = {
+  position: string;
+  onMove: (from: string, to: string) => boolean;
+}; 
+
+export default function ChessBoard({ position, onMove }: ChessBoardProps)  {
     return(
       <Chessboard
         options={{
+            position,
             allowDragging: true,
             boardOrientation: "white",
-            lightSquareStyle: { backgroundColor: "#f0d9b5" },
-            darkSquareStyle: { backgroundColor: "#b58863" },
+            lightSquareStyle: { backgroundColor: "#f3f1ef" },
+            darkSquareStyle: { backgroundColor: "#383736" },
+            onPieceDrop: ({ sourceSquare, targetSquare }) => {
+  if (!sourceSquare || !targetSquare) return false;
+
+  return onMove(sourceSquare, targetSquare);
+},
         }}
       />
     );

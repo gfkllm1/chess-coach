@@ -1,11 +1,29 @@
+"use client";
+
+import { useState } from "react";
+import { Chess } from "chess.js";
 import ChessBoard from "./components/ChessBoard";
 
 export default function Home() {
+     const [game] = useState(() => new Chess());
+     const [fen, setFen] = useState(() => game.fen());
+     
+  function handleMove(from: string, to: string) {
+    if (game.isGameOver()) return false;
+
+    try {
+      game.move({ from, to, promotion: "q" });
+      setFen(game.fen());
+      return true;
+    } catch {
+       return false;
+      }
+   }
+   
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
-      <h1 className="mb-4 text-4xl font-bold">Welcome to Chess Coach</h1>
         <div className="w-full max-w-xl">
-          <ChessBoard />
+          <ChessBoard position={fen} onMove={handleMove} />
       </div>
     </main>
   );
