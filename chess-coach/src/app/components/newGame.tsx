@@ -16,12 +16,12 @@ export default function NewGameDialog({
       {
       <button
        type="button"
-       onClick={() => dialogRef.current?.showModal()} className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
+       onClick={() => dialogRef.current?.showModal()} className="mx-auto mt-4 block rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600">
        New Game
       </button>
 }
-      <dialog ref={dialogRef} className="rounded-lg p-6">
-        <h2 className="mb-4 text-lg font-semibold">Choose Your Side</h2>
+      <dialog ref={dialogRef} className="m-auto w-[calc(100%_-_2rem)] max-w-md rounded-lg p-6">
+        <h2 className="mx-auto text-lg font-semibold">Choose Your Side</h2>
         <div className="flex justify-center gap-4">
           
           <button
@@ -30,7 +30,7 @@ export default function NewGameDialog({
               onChooseSide("white");
               dialogRef.current?.close();
             }}
-            className="rounded bg-white px-4 py-2 text-black hover:bg-gray-200"
+            className=" rounded bg-white px-4 py-2 text-black hover:bg-gray-200"
           >
             White
           </button>
@@ -45,16 +45,16 @@ export default function NewGameDialog({
           >
             Black
           </button>
+                    </div>
 
            <button
             type="button"
             onClick={() => dialogRef.current?.close()}
-            className="rounded bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
+            className=" mt-4 block rounded bg-gray-300 px-4 py-2 text-black hover:bg-gray-400"
           >
             Cancel
           </button>
-            
-        </div>
+
       </dialog>
       </>
     );
