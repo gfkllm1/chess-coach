@@ -6,6 +6,7 @@ import ChessBoard from "./components/ChessBoard";
 import NewGameDialog from "./components/newGame";
 
 export default function Home() {
+
      const [game] = useState(() => new Chess());
      const [fen, setFen] = useState(() => game.fen());
      const [playerColor, setPlayerColor] = useState<"white" | "black">("white");
@@ -18,6 +19,8 @@ export default function Home() {
      const isPlayerTurn = () => {
       return (game.turn() === (playerColor === "white" ? "w" : "b"));
      }
+     const [highlightMoves, setHighlightMoves] = useState(true);
+
 
   function requestEngineMove(job: "play" | "recommend") {
     const engine = engineRef.current;
@@ -29,6 +32,7 @@ export default function Home() {
     engine.postMessage(`position fen ${game.fen()}`);
     engine.postMessage("go movetime 500");
   }
+
 
   function handleMove(from: string, to: string) {
     const playerSide = playerColor === "white" ? "w" : "b";
@@ -46,7 +50,8 @@ export default function Home() {
       return true;
    }
 
-   function startGame(color: "white" | "black") {
+
+   function startGame(color: "white" | "black", highlight: boolean) {
     if (!engineReady || jobRef.current) return;
 
     game.reset();
@@ -54,11 +59,14 @@ export default function Home() {
     setPlayerColor(color);
     setEngineMove(null);
     setRecommendedMove(null);
+    setHighlightMoves(highlight);
     if (color === "black"){
       requestEngineMove("play");
     }
 
     }
+
+
     useEffect(() => {
       const engine = new Worker("/engine/stockfish-19-lite-single.js");
       engineRef.current = engine;
@@ -114,6 +122,7 @@ export default function Home() {
     }
     }, [game]);
   
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
         <div className="w-full max-w-xl">
@@ -130,8 +139,8 @@ export default function Home() {
           {recommendedMove  ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`: ""}
         </p>
 
-          <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} />
-          <NewGameDialog onChooseSide={startGame} /> 
+          <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} recommendedMove={highlightMoves ? recommendedMove : null} />
+          <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} /> 
          
       </div>
     </main>
