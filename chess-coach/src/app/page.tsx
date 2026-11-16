@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Chess } from "chess.js";
+import { Chess , type Square} from "chess.js";
 import ChessBoard from "./components/ChessBoard";
 import NewGameDialog from "./components/newGame";
 
@@ -20,7 +20,7 @@ export default function Home() {
       return (game.turn() === (playerColor === "white" ? "w" : "b"));
      }
      const [highlightMoves, setHighlightMoves] = useState(true);
-
+     const [chatOpen, setChatOpen] = useState(false);
 
   function requestEngineMove(job: "play" | "recommend") {
     const engine = engineRef.current;
@@ -143,6 +143,18 @@ export default function Home() {
           <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} /> 
          
       </div>
+         <button
+            type="button"
+            aria-expanded={chatOpen}
+            aria-controls="move-explainer"
+            onClick={() => setChatOpen((open) => ! open)}
+            className="fixed bottom-5 right-5 z-10 inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 font-semibold text-white shadow-md hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+           >
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+            <path d="M12 3C6.5 3 2 6.6 2 11c0 2.2 1.1 4.2 3 5.7L4 21l4.6-2.5c1.1.3 2.2.5 3.4.5 5.5 0 10-3.6 10-8s-4.5-8-10-8Z" />
+             </svg>
+            {chatOpen ? "Close Move Explainer" : "Move Explainer"}
+          </button>
     </main>
   );
 }
