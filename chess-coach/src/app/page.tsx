@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Chess } from "chess.js";
 import ChessBoard from "./components/ChessBoard";
+import NewGameDialog from "./components/newGame";
 
 export default function Home() {
      const [game] = useState(() => new Chess());
@@ -31,7 +32,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
         <div className="w-full max-w-xl">
           <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} />
-          
+          <NewGameDialog onChooseSide={startGame} /> 
       </div>
     </main>
   );
