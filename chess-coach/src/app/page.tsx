@@ -116,14 +116,20 @@ export default function Home() {
   
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
-        <p className="mb-2 text-center h-6">
-          {isEngineThinking
-            ? "Engine is thinking..."
-            : engineMove
-            ? `Engine played: ${engineMove}`
-            : ""}
-        </p>
         <div className="w-full max-w-xl">
+          <button
+            type="button"
+            onClick={() => requestEngineMove("recommend")}
+            disabled={!engineReady || isEngineThinking || !isPlayerTurn() || game.isGameOver()}
+            className="mx-auto mt-4  rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600"
+           >
+            Recommend a move
+          </button>
+
+        <p className="mt-2 min-h-5 text-sm" role="status">
+          {recommendedMove  ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`: ""}
+        </p>
+
           <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} />
           <NewGameDialog onChooseSide={startGame} /> 
          
