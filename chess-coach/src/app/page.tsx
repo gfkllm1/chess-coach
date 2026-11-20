@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { Chess , type Square} from "chess.js";
 import ChessBoard from "./components/ChessBoard";
 import NewGameDialog from "./components/newGame";
+import  MoveChat  from "./components/MoveChat";
 
 export default function Home() {
 
@@ -143,6 +144,7 @@ export default function Home() {
           <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} /> 
          
       </div>
+
          <button
             type="button"
             aria-expanded={chatOpen}
@@ -155,6 +157,9 @@ export default function Home() {
              </svg>
             {chatOpen ? "Close Move Explainer" : "Move Explainer"}
           </button>
+          {chatOpen && <MoveChat />}
+
+
     </main>
   );
 }
