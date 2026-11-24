@@ -122,11 +122,59 @@ export default function Home() {
       jobRef.current = null;
     }
     }, [game]);
-  
+
+let resultTitle = "";
+let resultReason = "";
+
+if (game.isCheckmate()) {
+  const playerSide = playerColor === "white" ? "w" : "b";
+  const playerLost = game.turn() === playerSide;
+
+  resultTitle = playerLost
+    ? playerColor === "white" ? "Black wins" : "White wins"
+    : "You won!";
+
+  resultReason = "By checkmate";
+} else if (game.isDraw()) {
+  resultTitle = "Draw";
+  resultReason = game.isStalemate() ? "By stalemate" : "Game drawn";
+}
+const resultDialogRef = useRef<HTMLDialogElement>(null);
+
+useEffect(() => {
+  const dialog = resultDialogRef.current;
+  if (!dialog) return;
+
+  if (resultTitle && !dialog.open) {
+    dialog.showModal();
+  } else if (!resultTitle && dialog.open) {
+    dialog.close();
+  }
+}, [resultTitle]);
 return (
   <main className="flex min-h-screen flex-col bg-white text-black">
  
+     <dialog
+         ref={resultDialogRef}
+         aria-labelledby="game-result-title"
+         className="m-auto w-[calc(100%_-_2rem)] max-w-sm rounded-2xl bg-white p-8 text-center text-black shadow-xl backdrop:bg-black/40"
+      >
+      <h2 id="game-result-title" className="text-3xl font-bold">
+          {resultTitle}
+      </h2>
 
+      <p className="mt-2 text-lg text-neutral-600">
+         {resultReason}
+     </p>
+
+      <button
+        type="button"
+        onClick={() => resultDialogRef.current?.close()}
+        className="mt-6 rounded-lg bg-black px-5 py-2 text-white"
+       >
+         Close
+     </button>
+    </dialog>
 
     <div className="flex flex-1 items-start justify-center px-4 py-6">
       <div className="flex w-full max-w-5xl flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
@@ -155,6 +203,8 @@ return (
             />
           </div>
 
+        
+
           <div className="mt-4">
             <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} />
           </div>
@@ -165,7 +215,7 @@ return (
       </div>
     </div>
 
-  
+
     <button
       type="button"
       aria-expanded={chatOpen}
