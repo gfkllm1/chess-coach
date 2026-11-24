@@ -123,43 +123,61 @@ export default function Home() {
     }
     }, [game]);
   
+return (
+  <main className="flex min-h-screen flex-col bg-white text-black">
+ 
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-white px-4 text-black">
-        <div className="w-full max-w-xl">
+
+    <div className="flex flex-1 items-start justify-center px-4 py-6">
+      <div className="flex w-full max-w-5xl flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
+        <div className="flex w-full max-w-xl flex-col items-center">
           <button
             type="button"
             onClick={() => requestEngineMove("recommend")}
             disabled={!engineReady || isEngineThinking || !isPlayerTurn() || game.isGameOver()}
-            className="mx-auto mt-4  rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600"
-           >
+            className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600 disabled:opacity-40"
+          >
             Recommend a move
           </button>
 
-        <p className="mt-2 min-h-5 text-sm" role="status">
-          {recommendedMove  ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`: ""}
-        </p>
+          <p className="mt-2 min-h-5 text-sm font-medium" role="status">
+            {recommendedMove
+              ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`
+              : ""}
+          </p>
 
-          <ChessBoard position={fen} onMove={handleMove} boardOrientation={playerColor} recommendedMove={highlightMoves ? recommendedMove : null} />
-          <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} /> 
-         
+          <div className="mt-2 w-full">
+            <ChessBoard
+              position={fen}
+              onMove={handleMove}
+              boardOrientation={playerColor}
+              recommendedMove={highlightMoves ? recommendedMove : null}
+            />
+          </div>
+
+          <div className="mt-4">
+            <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} />
+          </div>
+        </div>
+
+    
+        {chatOpen && <MoveChat fen={fen} recommendedMove={recommendedMove} />}
       </div>
+    </div>
 
-         <button
-            type="button"
-            aria-expanded={chatOpen}
-            aria-controls="move-explainer"
-            onClick={() => setChatOpen((open) => ! open)}
-            className="fixed bottom-5 right-5 z-10 inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 font-semibold text-white shadow-md hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-           >
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-            <path d="M12 3C6.5 3 2 6.6 2 11c0 2.2 1.1 4.2 3 5.7L4 21l4.6-2.5c1.1.3 2.2.5 3.4.5 5.5 0 10-3.6 10-8s-4.5-8-10-8Z" />
-             </svg>
-            {chatOpen ? "Close Move Explainer" : "Move Explainer"}
-          </button>
-          {chatOpen && <MoveChat />}
-
-
-    </main>
-  );
+  
+    <button
+      type="button"
+      aria-expanded={chatOpen}
+      aria-controls="move-explainer"
+      onClick={() => setChatOpen((open) => !open)}
+      className="fixed bottom-5 right-5 z-20 inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 font-semibold text-white shadow-md hover:bg-neutral-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+    >
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+        <path d="M12 3C6.5 3 2 6.6 2 11c0 2.2 1.1 4.2 3 5.7L4 21l4.6-2.5c1.1.3 2.2.5 3.4.5 5.5 0 10-3.6 10-8s-4.5-8-10-8Z" />
+      </svg>
+      {chatOpen ? "Close Move Explainer" : "Move Explainer"}
+    </button>
+  </main>
+);
 }
