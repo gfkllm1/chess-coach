@@ -5,8 +5,40 @@ import { Chess , type Square} from "chess.js";
 import ChessBoard from "./components/ChessBoard";
 import NewGameDialog from "./components/newGame";
 import  MoveChat  from "./components/MoveChat";
+import { useAuthUser } from "../lib/userAuth";
+import {
+  useGameAutoSave,
+  type SavedMessage,
+} from "../lib/autoSave";
 
 export default function Home() {
+  const { userId, error } = useAuthUser();
+
+  if (userId === undefined) {
+    return (
+      <p className="p-6 text-center" role="status">
+        Loading…
+      </p>
+    );
+  }
+
+  return (
+    <>
+      {error && (
+        <p className="p-3 text-center text-red-700" role="alert">
+          {error}
+        </p>
+      )}
+
+      <ChessGame
+        key={userId ?? "guest"}
+        userId={userId}
+      />
+    </>
+  );
+}
+
+function ChessGame({ userId }: { userId: string | null }) {
 
      const [game] = useState(() => new Chess());
      const [fen, setFen] = useState(() => game.fen());
@@ -22,6 +54,26 @@ export default function Home() {
      }
      const [highlightMoves, setHighlightMoves] = useState(true);
      const [chatOpen, setChatOpen] = useState(false);
+const [round, setRound] = useState(0);
+const [messages, setMessages] = useState<SavedMessage[]>([]);
+
+const savedResult = game.isCheckmate()
+  ? game.turn() === "w"
+    ? "0-1"
+    : "1-0"
+  : game.isDraw()
+    ? "1/2-1/2"
+    : "*";
+
+const { saveStatus, saveError } = useGameAutoSave({
+  userId,
+  round,
+  playerColor,
+  fen,
+  pgn: game.pgn(),
+  result: savedResult,
+  messages,
+});
 
   function requestEngineMove(job: "play" | "recommend") {
     const engine = engineRef.current;
@@ -52,21 +104,26 @@ export default function Home() {
    }
 
 
-   function startGame(color: "white" | "black", highlight: boolean) {
-    if (!engineReady || jobRef.current) return;
+   function startGame(
+  color: "white" | "black",
+  highlight: boolean
+) {
+  if (!engineReady || jobRef.current) return;
 
-    game.reset();
-    setFen(game.fen());
-    setPlayerColor(color);
-    setEngineMove(null);
-    setRecommendedMove(null);
-    setHighlightMoves(highlight);
-    if (color === "black"){
-      requestEngineMove("play");
-    }
+  game.reset();
 
-    }
+  setRound((current) => current + 1);
+  setMessages([]);
+  setFen(game.fen());
+  setPlayerColor(color);
+  setEngineMove(null);
+  setRecommendedMove(null);
+  setHighlightMoves(highlight);
 
+  if (color === "black") {
+    requestEngineMove("play");
+  }
+}
 
     useEffect(() => {
       const engine = new Worker("/engine/stockfish-19-lite-single.js");
@@ -151,6 +208,7 @@ useEffect(() => {
     dialog.close();
   }
 }, [resultTitle]);
+
 return (
   <main className="flex min-h-screen flex-col bg-white text-black">
  
@@ -211,10 +269,16 @@ return (
         </div>
 
     
-        {chatOpen && <MoveChat fen={fen} recommendedMove={recommendedMove} />}
-      </div>
+<div hidden={!chatOpen}>
+  <MoveChat
+    key={round}
+    fen={fen}
+    recommendedMove={recommendedMove}
+    messages={messages}
+    setMessages={setMessages}
+  />
+</div>      </div>
     </div>
-
 
     <button
       type="button"
@@ -228,6 +292,8 @@ return (
       </svg>
       {chatOpen ? "Close Move Explainer" : "Move Explainer"}
     </button>
+
+
   </main>
 );
 }
