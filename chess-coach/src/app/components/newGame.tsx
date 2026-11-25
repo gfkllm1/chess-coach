@@ -22,7 +22,7 @@ export default function NewGameDialog({
         setHighlightChoice(highlightMoves);
         dialogRef.current?.showModal();
       }}
-      className="mx-auto mt-4 block rounded-lg bg-black px-4 py-2 font-bold text-white hover:bg-neutral-800"
+      className="mx-auto block rounded-lg bg-black px-4 py-2 font-bold text-white hover:bg-neutral-800"
     >
       New Game
     </button>

@@ -237,20 +237,8 @@ return (
     <div className="flex flex-1 items-start justify-center px-4 py-6">
       <div className="flex w-full max-w-5xl flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
         <div className="flex w-full max-w-xl flex-col items-center">
-          <button
-            type="button"
-            onClick={() => requestEngineMove("recommend")}
-            disabled={!engineReady || isEngineThinking || !isPlayerTurn() || game.isGameOver()}
-            className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600 disabled:opacity-40"
-          >
-            Recommend a move
-          </button>
-
-          <p className="mt-2 min-h-5 text-sm font-medium" role="status">
-            {recommendedMove
-              ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`
-              : ""}
-          </p>
+         
+         
 
           <div className="mt-2 w-full">
             <ChessBoard
@@ -263,21 +251,37 @@ return (
 
         
 
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
             <NewGameDialog onChooseSide={startGame} highlightMoves={highlightMoves} />
+             <button
+            type="button"
+            onClick={() => requestEngineMove("recommend")}
+            disabled={!engineReady || isEngineThinking || !isPlayerTurn() || game.isGameOver()}
+            className="rounded bg-black px-4 py-2 font-bold text-white hover:bg-gray-600 disabled:opacity-40"
+          >
+            Recommend a move
+          </button>
+
           </div>
+           <p className="mt-2 min-h-5 text-sm font-medium" role="status">
+            {recommendedMove
+              ? `Recommended move: ${recommendedMove.slice(0, 2)} → ${recommendedMove.slice(2, 4)}`
+              : ""}
+          </p>
         </div>
 
     
-<div hidden={!chatOpen}>
-  <MoveChat
-    key={round}
-    fen={fen}
-    recommendedMove={recommendedMove}
-    messages={messages}
-    setMessages={setMessages}
-  />
-</div>      </div>
+       <div hidden={!chatOpen}>
+        <MoveChat
+           key={round}
+           fen={fen}
+           recommendedMove={recommendedMove}
+           messages={messages}
+           setMessages={setMessages}
+          />
+
+       </div>      
+       </div>
     </div>
 
     <button
