@@ -15,6 +15,8 @@ type MoveChatProps = {
   recommendedMove: string | null;
   messages: SavedMessage[];
   setMessages: Dispatch<SetStateAction<SavedMessage[]>>;
+  onClose: () => void;
+
 };
 
 export default function MoveChat({
@@ -22,6 +24,8 @@ export default function MoveChat({
   recommendedMove,
   messages,
   setMessages,
+  onClose,
+
 }: MoveChatProps) {
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
@@ -30,12 +34,14 @@ export default function MoveChat({
   const requestRef = useRef<AbortController | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
-  }, [messages, pending]);
+ useEffect(() => {
+  const conversation = bottomRef.current?.parentElement;
+
+  conversation?.scrollTo({
+    top: conversation.scrollHeight,
+    behavior: "smooth",
+  });
+}, [messages, pending]);
 
   useEffect(() => {
     return () => requestRef.current?.abort();
@@ -131,86 +137,94 @@ export default function MoveChat({
   }
 
   return (
-    <section
-      id="move-explainer"
-      aria-labelledby="move-explainer-title"
-      className="w-full rounded-xl border border-neutral-300 bg-white p-4 text-black shadow-lg lg:fixed lg:bottom-24 lg:right-5 lg:z-10 lg:w-[22rem]"
-    >
-      <h2
-        id="move-explainer-title"
-        className="text-lg font-bold"
-      >
-        Move Explainer
-      </h2>
+  <section
+    id="move-explainer"
+    aria-labelledby="move-explainer-title"
+    className="flex h-[36rem] max-h-[75dvh] w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-neutral-300 bg-white text-black shadow-sm lg:h-full"
+  >
+    <header className="shrink-0 border-b border-neutral-200 p-5">
+      <div className="flex items-center justify-between gap-3">
+        <h2
+          id="move-explainer-title"
+          className="text-xl font-bold"
+        >
+          Move Explainer
+        </h2>
 
-      <p className="mt-1 text-sm text-neutral-600">
-        Ask about the current position. AI explanations can contain errors.
-      </p>
-
-      {recommendedMove && (
-        <div className="mt-3">
-      
-
-          <button
-            type="button"
-            disabled={pending}
-            onClick={() =>
-              void sendQuestion(
-                "Why is this move recommended?"
-              )
-            }
-            className="mt-2 rounded-full border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-100 disabled:opacity-50"
-          >
-            Why is this move recommended?
-          </button>
-        </div>
-      )}
-
-      <div
-        className="mt-4 max-h-[40vh] space-y-3 overflow-y-auto"
-        role="log"
-        aria-label="Chat messages"
-        aria-live="polite"
-      >
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`w-fit max-w-[90%] rounded-xl px-3 py-2 text-sm ${
-              message.role === "user"
-                ? "ml-auto bg-black text-white"
-                : "bg-neutral-100 text-black"
-            }`}
-          >
-            <p className="mb-1 text-xs font-semibold">
-              {message.role === "user"
-                ? "You"
-                : "Move Explainer"}
-            </p>
-
-            <p className="whitespace-pre-wrap break-words">
-              {message.content}
-            </p>
-          </div>
-        ))}
-
-        {pending && (
-          <p className="text-sm text-neutral-600" role="status">
-            Writing a reply…
-          </p>
-        )}
-
-        <div ref={bottomRef} />
       </div>
 
+  
+      <p className="mt-2 text-sm text-neutral-600">
+        	Ask about the current board or get a simple explanation of a recommended move.
+      </p>
+
+
+      
+    </header>
+
+    <div
+      className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain bg-neutral-50 p-4"
+      role="log"
+      aria-label="Chat messages"
+      aria-live="polite"
+    >
+   
+
+      {messages.map((message) => (
+        <div
+          key={message.id}
+          className={`w-fit max-w-[90%] rounded-2xl px-4 py-3 text-sm ${
+            message.role === "user"
+              ? "ml-auto bg-black text-white"
+              : "border border-neutral-200 bg-white text-black"
+          }`}
+        >
+          <p className="whitespace-pre-wrap break-words leading-relaxed">
+            {message.content}
+          </p>
+        </div>
+      ))}
+
+      {pending && (
+        <p
+          className="text-sm text-neutral-600"
+          role="status"
+        >
+          Writing a reply…
+        </p>
+      )}
+
+      <div ref={bottomRef} />
+    </div>
+
+    <footer className="shrink-0 border-t border-neutral-200 bg-white p-4">
+      {recommendedMove && (
+        <button
+          type="button"
+          disabled={pending}
+          onClick={() =>
+            void sendQuestion(
+              "Why is this move recommended?"
+            )
+          }
+          className="mb-3 rounded-full border border-neutral-300 px-3 py-2 text-sm hover:bg-neutral-100 disabled:opacity-50"
+        >
+          Why is this move recommended?
+        </button>
+      )}
+
       {error && (
-        <p className="mt-3 text-sm text-red-700" role="alert">
+        <p
+          className="mb-3 text-sm text-red-700"
+          role="alert"
+        >
           {error}
         </p>
       )}
 
       <form
         onSubmit={handleSubmit}
-        className="mt-4 flex gap-2"
+        className="flex gap-2"
       >
         <input
           aria-label="Question about the board"
@@ -219,17 +233,22 @@ export default function MoveChat({
           onChange={(event) => setDraft(event.target.value)}
           maxLength={500}
           disabled={pending}
-          className="min-w-0 flex-1 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm"
+          className="min-w-0 flex-1 rounded-lg border border-neutral-300 bg-white px-3 py-3 text-sm focus-visible:outline-2 focus-visible:outline-black"
         />
 
         <button
           type="submit"
           disabled={pending || !draft.trim()}
-          className="rounded-lg bg-black px-3 py-2 text-sm text-white disabled:opacity-40"
+          className="rounded-lg bg-black px-4 py-3 text-sm font-medium text-white hover:bg-neutral-800 disabled:opacity-40"
         >
           Send
         </button>
       </form>
-    </section>
-  );
+
+      <p className="mt-3 text-center text-xs text-neutral-500">
+        AI explanations can contain errors.
+      </p>
+    </footer>
+  </section>
+);
 }

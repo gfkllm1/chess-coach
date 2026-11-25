@@ -235,8 +235,12 @@ return (
     </dialog>
 
     <div className="flex flex-1 items-start justify-center px-4 py-6">
-      <div className="flex w-full max-w-5xl flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
-        <div className="flex w-full max-w-xl flex-col items-center">
+      <div className={`mx-auto grid w-full items-start gap-6 ${
+    chatOpen
+      ? "max-w-6xl grid-cols-1 lg:grid-cols-[minmax(0,1fr)_22rem]"
+      : "max-w-xl grid-cols-1"
+  }`}>
+        <div className="flex w-full min-w-0 max-w-xl flex-col items-center justify-self-center">
          
          
 
@@ -271,16 +275,20 @@ return (
         </div>
 
     
-       <div hidden={!chatOpen}>
+       <div
+  
+       hidden={!chatOpen}
+       className="w-full min-w-0 lg:self-stretch"
+       >
         <MoveChat
-           key={round}
-           fen={fen}
-           recommendedMove={recommendedMove}
-           messages={messages}
-           setMessages={setMessages}
-          />
-
-       </div>      
+        key={round}
+        fen={fen}
+        recommendedMove={recommendedMove}
+        messages={messages}
+        setMessages={setMessages}
+        onClose={() => setChatOpen(false)}
+        />
+     </div>
        </div>
     </div>
 
